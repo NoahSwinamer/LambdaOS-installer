@@ -2,11 +2,11 @@
 # print command before executing, and exit when any command fails
 set -xe
 
-hostname=arch
+hostname=lambdaos
 # regular user name
-username=arch
+username=Noah
 # password for regular user. Password for root will not be set
-password=123456
+password=lambdaos
 
 # Timezone
 rm -f /etc/localtime
@@ -62,9 +62,8 @@ EOF
   sed -i "s#/dev/sda2#$root_partition#" /boot/loader/entries/arch.conf
 else
   disk=$(df / | tail -1 | cut -d' ' -f1 | sed 's#[0-9]\+##g')
-  pacman --noconfirm -S grub os-prober
-  grub-install --target=i386-pc "$disk"
-  grub-mkconfig -o /boot/grub/grub.cfg
+  pacman --noconfirm -S limine
+  limine bios-install $disk
 fi
 
 # Config sudo
@@ -107,11 +106,8 @@ fi
 #   pacman -S --noconfirm xf86-input-synaptics
 # fi
 
-# gnome
-pacman -S --noconfirm gdm gnome-shell gnome-shell-extensions gnome-keyring seahorse gnome-backgrounds \
-  gnome-control-center gnome-font-viewer xdg-user-dirs-gtk \
-  gnome-power-manager gnome-system-monitor gnome-terminal nautilus gvfs-mtp eog evince \
-  file-roller gnome-tweaks networkmanager
+# xfce
+pacman -S --noconfirm xfce4 xfce4-goodies
 
 # Native browser connector for integration with extensions.gnome.org
 pacman -S --noconfirm chrome-gnome-shell
